@@ -33,8 +33,8 @@ void MainWindow::on_pushButton_clicked()
 
         QTextBlock textLine=doc->findBlockByNumber(i) ; // 文本中的一行
         QString temp_horn=textLine.text();
-        ch[i]=temp_horn.toStdString();
-        q.push(make_pair(ch[i],i));
+        ch[i+1]=temp_horn.toStdString();
+        q.push(make_pair(ch[i+1],i+1));
 
     }
 
@@ -75,9 +75,9 @@ void MainWindow::on_pushButton_2_clicked()
             {
                 str+=" ";
                 str+="(";
-                str+=ha[ff1[i]];
+                str+=to_string(ha[ff1[i]]);
                 str+=")+(";
-                str+=ha[ff2[i]];
+                str+=to_string(ha[ff2[i]]);
                 str+=")";
                 //cout<<" "<<"("<<ha[ff1[i]]<<")+("<<ha[ff2[i]]<<")";
                 if(bb[i])
