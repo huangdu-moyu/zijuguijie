@@ -21,44 +21,42 @@ struct Word
 
 struct Clause
 {
-    /*int len;
-    string f[15];
-    string ff[15][5];
-    bool b[15];
-    int l[15];*/
     vector<Word> words;
+    bool isBase=false;
+    size_t parentNo[2];
 };
 
 
-
+const int maxClauseNumber=505;
 
 class Solver
 {
 private:
     int n;
-    vector<string> ch;
-    bool fgg[505][505];
+    vector<Clause> clausePool;
+    bool merged[maxClauseNumber][maxClauseNumber];
     string ss1,ss2;
 
-    int resClauses[505];
-    size_t resClauseNumber;
+    vector<size_t> resClauses;
+    //int resClauses[505];
+    //size_t resClauseNumber;
     string kk1[505],kk2[505];
     bool bb[505];
-    int ff1[505],ff2[505];
-    queue<pair<string,int> >q;
+    queue<size_t> q; //存放子句编号
 
     Clause split(const string& s);
     int check(const Clause& a,const Clause& b);
     Clause merge(const Clause& a,const Clause& b,int fl);
     string change(const Clause& x);
     bool checkans(const Clause& x);
-    void dfs(int x);
+    void dfs(size_t x);
     vector<string> getresult();
+    void init(const vector<string>& clauses);
 public:
     Solver();
-    vector<string> solve();
+    vector<string> solve(const vector<string>& clauses);
     void clear();
-    void init(const vector<string>& clauses);
+
 };
 
 

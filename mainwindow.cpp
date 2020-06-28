@@ -47,9 +47,8 @@ void MainWindow::on_pushButton_clicked()
         //s.ch[i + 1] = temp_horn.toStdString();
         //s.q.push(make_pair(s.ch[i + 1], i + 1));
     }
-    s.init(ch);
 
-    vector<string> res=s.solve();
+    vector<string> res=s.solve(ch);
 
     for (const string& str:res)
     {

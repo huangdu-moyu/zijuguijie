@@ -227,7 +227,7 @@ string Solver::change(const Clause& x)
     {
         if(x.words[i].is_neg)
         {
-            res+="~";
+            res+="¬";
         }
         res+=x.words[i].predicate;
         res+="(";
@@ -238,7 +238,7 @@ string Solver::change(const Clause& x)
         }
         if(i!=x.words.size()-1)
         {
-            res+="|";
+            res+="∨";
         }
     }
     return res;
@@ -252,40 +252,41 @@ bool Solver::checkans(const Clause& x)
     return x.words[0].predicate=="ANSWER"&&x.words[0].is_neg==false;
 }
 
-void Solver::dfs(int x)
+void Solver::dfs(size_t x)
 {
-    resClauses[resClauseNumber++]=x;
-    if(x<10)
+    resClauses.push_back(x);
+    if(clausePool[x].isBase)
     {
         return;
     }
-    dfs(ff1[x]);
-    dfs(ff2[x]);
+    dfs(clausePool[x].parentNo[0]);
+    dfs(clausePool[x].parentNo[1]);
 }
 
 vector<string> Solver::getresult()
 {
-    sort(resClauses, resClauses + resClauseNumber);
-    resClauseNumber=static_cast<size_t>(
-                unique(resClauses,resClauses+resClauseNumber)-resClauses);
+    sort(resClauses.begin(), resClauses.end());
+    resClauses.resize(
+                static_cast<size_t>(
+                    unique(resClauses.begin(),resClauses.end())-resClauses.begin()
+                    )
+                );
     vector<string> res;
     string str;
-    for(size_t i=0;i<resClauseNumber;i++)
+    for(size_t i=0;i<resClauses.size();i++)
     {
-        size_t u=static_cast<size_t>(resClauses[i]);
-        str = "  " + to_string(i+1) + ":  " + ch[u];
-        if (i > 9)
+        size_t u=resClauses[i];
+        str = "  " + to_string(i+1) + ":  " + change(clausePool[u]);
+        if (!clausePool[u].isBase)
         {
             str += " (";
-            str += to_string(ff1[i]+1);
+            str += to_string(clausePool[u].parentNo[0]+1);
             str += ")+(";
-            str += to_string(ff2[i]+1);
+            str += to_string(clausePool[u].parentNo[1]+1);
             str += ")";
-            //cout<<" "<<"("<<ha[ff1[i]]<<")+("<<ha[ff2[i]]<<")";
             if (bb[i])
             {
                 str += "    "+kk2[i] + "/" + kk1[i];
-                //cout<<"    "<<kk2[i]<<"/"<<kk1[i];
             }
         }
         res.push_back(str);
@@ -293,31 +294,40 @@ vector<string> Solver::getresult()
     return res;
 }
 
-vector<string> Solver::solve()
+vector<string> Solver::solve(const vector<string> &clauses)
 {
+    init(clauses);
+    //使用宽度优先搜索，从单子句出发归结
     while(!q.empty())
     {
-        string s=q.front().first;
-        int num=q.front().second;
-        Clause t=split(s);
+        //string s=q.front().first;
+        //size_t num=q.front().second;
+        size_t num=q.front();
+        const Clause& t=clausePool[q.front()];
         q.pop();
         if(t.words.size()!=1)
         {
             continue;
         }
         //bool flag=0;
-        for(int i=0;i<n;i++)
+        for(size_t i=0;i<clausePool.size();i++)
         {
-            Clause tp=split(ch[i]);
+            if(i==num||merged[i][num])
+            {
+                continue;
+            }
+            const Clause& tp=clausePool[i];
             int tpp=0;
         //	cout<<s<<" "<<ch[i]<<endl;
-            if(i!=num&&!fgg[i][num]&&(tpp=check(t,tp)))
+            if((tpp=check(t,tp)))
             {
                 Clause k=merge(t,tp,tpp);
-                ch.push_back(change(k));
+                k.parentNo[0]=i;
+                k.parentNo[1]=static_cast<size_t>(num);
+                clausePool.push_back(k);
         //		print(ch[n],n,t,i,tp,num,tpp);
-                ff1[n]=i;
-                ff2[n]=num;
+                //ff1[n]=i;
+                //ff2[n]=num;
                 if(tpp==2)
                 {
                     bb[n]=1;
@@ -327,18 +337,17 @@ vector<string> Solver::solve()
                 //flag=1;
                 if(checkans(k))
                 {
-                    dfs(n);
-
+                    dfs(clausePool.size()-1);
                     return getresult();
                 }
-                q.push(make_pair(*ch.rbegin(),n));
-                fgg[i][num]=fgg[num][i]=1;
+                q.push(clausePool.size()-1);
+                merged[i][num]=merged[num][i]=1;
             //	fgg[i]=1;
                 n++;
                 break;
             }
         }
-        q.push(make_pair(s,num));
+        q.push(num);
     }
     return vector<string>();
 }
@@ -346,29 +355,28 @@ vector<string> Solver::solve()
 void Solver::clear()
 {
     n = 0;
-    ch.clear();
-    memset(fgg, 0, sizeof(fgg));
+    clausePool.clear();
+    resClauses.clear();
+    memset(merged, 0, sizeof(merged));
     ss1 = "";
     ss2 = "";
 
     //memset(resClauses, 0, sizeof(resClauses));
-    resClauseNumber = 0;
     memset(kk1, 0, sizeof(kk1));
     memset(kk2, 0, sizeof(kk2));
     memset(bb, 0, sizeof(bb));
-    memset(ff1, 0, sizeof(ff1));
-    memset(ff2, 0, sizeof(ff2));
 
-    queue<pair<string, int>> empty;
+    queue<size_t> empty;
     swap(empty, q);
 }
 
 void Solver::init(const vector<string> &clauses)
 {
-    n=static_cast<int>(clauses.size());
-    ch=clauses;
-    for(int i=0;i<n;i++)
+    n=clauses.size();
+    for(size_t i=0;i<clauses.size();i++)
     {
-        q.push(make_pair(ch[i], i));
+        clausePool.push_back(split(clauses[i]));
+        clausePool.rbegin()->isBase=true;
+        q.push(i);
     }
 }
