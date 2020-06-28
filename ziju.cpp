@@ -263,7 +263,37 @@ void Solver::dfs(int x)
     dfs(ff2[x]);
 }
 
-void Solver::solve()
+vector<string> Solver::getresult()
+{
+    sort(resClauses, resClauses + resClauseNumber);
+    resClauseNumber=static_cast<size_t>(
+                unique(resClauses,resClauses+resClauseNumber)-resClauses);
+    vector<string> res;
+    string str;
+    for(size_t i=0;i<resClauseNumber;i++)
+    {
+        size_t u=static_cast<size_t>(resClauses[i]);
+        str = "  " + to_string(i+1) + ":  " + ch[u];
+        if (i > 9)
+        {
+            str += " (";
+            str += to_string(ff1[i]+1);
+            str += ")+(";
+            str += to_string(ff2[i]+1);
+            str += ")";
+            //cout<<" "<<"("<<ha[ff1[i]]<<")+("<<ha[ff2[i]]<<")";
+            if (bb[i])
+            {
+                str += "    "+kk2[i] + "/" + kk1[i];
+                //cout<<"    "<<kk2[i]<<"/"<<kk1[i];
+            }
+        }
+        res.push_back(str);
+    }
+    return res;
+}
+
+vector<string> Solver::solve()
 {
     while(!q.empty())
     {
@@ -298,7 +328,8 @@ void Solver::solve()
                 if(checkans(k))
                 {
                     dfs(n);
-                    return;
+
+                    return getresult();
                 }
                 q.push(make_pair(*ch.rbegin(),n));
                 fgg[i][num]=fgg[num][i]=1;
@@ -309,6 +340,7 @@ void Solver::solve()
         }
         q.push(make_pair(s,num));
     }
+    return vector<string>();
 }
 
 void Solver::clear()
