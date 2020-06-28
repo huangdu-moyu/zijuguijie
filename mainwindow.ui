@@ -13,6 +13,11 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#MainWindow{
+border-image:url(:/image/timg,jpg);
+}</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
@@ -92,8 +97,8 @@
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>490</y>
+      <x>560</x>
+      <y>500</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -112,6 +117,45 @@
      </rect>
     </property>
    </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>-30</y>
+      <width>811</width>
+      <height>621</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>image/timg.jpg</pixmap>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_3">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>500</y>
+      <width>101</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>点击重置界面</string>
+    </property>
+   </widget>
+   <zorder>label_4</zorder>
+   <zorder>pushButton</zorder>
+   <zorder>InputNum</zorder>
+   <zorder>label</zorder>
+   <zorder>label_2</zorder>
+   <zorder>plainTextEdit</zorder>
+   <zorder>label_3</zorder>
+   <zorder>pushButton_2</zorder>
+   <zorder>show</zorder>
+   <zorder>pushButton_3</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

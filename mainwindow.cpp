@@ -21,7 +21,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    ui->show->append("123");    //调试语句
+    //ui->show->append("123");    //调试语句
     QString num_str=ui->InputNum->text();
 
     n= num_str.toInt();
@@ -91,4 +91,38 @@ void MainWindow::on_pushButton_2_clicked()
             qstr=QString::fromStdString(str);
             ui->show->append(qstr);
         }
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    //将所有全局变量清零
+    n=0;
+    //string ch[505];
+    memset(ch,0,sizeof(ch));
+    //extern bool fgg[505][505];
+    memset(fgg, 0, sizeof(fgg));
+    ss1="";
+    ss2="";
+
+    //extern int qq[505];
+    memset(qq, 0, sizeof(qq));
+    tt=0;
+    ha.clear();
+    //extern string kk1[505],kk2[505];
+    memset(kk1, 0, sizeof(kk1));
+    memset(kk2, 0, sizeof(kk2));
+    //extern bool bb[505];
+    memset(bb, 0, sizeof(bb));
+    //extern int ff1[505],ff2[505];
+    memset(ff1, 0, sizeof(ff1));
+    memset(ff2, 0, sizeof(ff2));
+    //extern queue<pair<string,int> >q;
+    queue<pair<string,int>> empty;
+    swap(empty, q);
+
+    //清空文本框
+    ui->show->clear();
+    ui->InputNum->clear();
+    ui->plainTextEdit->clear();
+
 }
