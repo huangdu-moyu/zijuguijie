@@ -5,6 +5,11 @@
 #include <QTextBlock>
 #include <vector>
 
+const int quesheng_size=10;
+QString quesheng[quesheng_size]={"K(A,A)|K(B,A)|K(C,A)","~K(x1,A)|H(x1,A)","~H(A,x2)|~H(C,x2)"
+                     ,"H(A,A)","H(A,C)","R(x3,A)|H(B,x3)","~H(A,x4)|H(B,x4)"
+                     ,"~H(x5,A)|~H(x5,B)|~H(x5,C)","~K(x6,A)|~R(x6,A)","~K(x7,A)|ANSWER(x7)"};
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -13,6 +18,10 @@ MainWindow::MainWindow(QWidget *parent)
     //ui->InputNum->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;");
     ui->show->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;");
     ui->plainTextEdit->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;");
+    for(int i=0;i<quesheng_size;i++)
+    {
+        ui->plainTextEdit->appendPlainText(quesheng[i]);
+    }
 }
 
 MainWindow::~MainWindow()
