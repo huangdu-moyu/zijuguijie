@@ -1,27 +1,19 @@
 #include "ziju.h"
 #include "mainwindow.h"
 
-int n;
-string ch[505];
-bool fgg[505][505];
-string ss1,ss2;
+Solver::Solver()
+{
+    clear();
+}
 
-int qq[505];
-int tt;
-map<int,int>ha;
-string kk1[505],kk2[505];
-bool bb[505];
-int ff1[505],ff2[505];
-queue<pair<string,int> >q;
-
-node split(string s)
+node Solver::split(string s)
 {
 //	cout<<s<<endl;
     string tp="";
-    int m=s.length();
+    size_t m=s.length();
     node k;
     bool fg=0;
-    for(int i=0;i<m;i++)
+    for(size_t i=0;i<m;i++)
     {
         if(i==m-1||s[i]=='(')
         {
@@ -31,7 +23,7 @@ node split(string s)
             tp="";
             fg=0;
             string tt="";
-            for(int j=i+1;j<m;j++)
+            for(size_t j=i+1;j<m;j++)
             {
                 if(j==m-1||s[j]==')'||s[j]==',')
                 {
@@ -67,7 +59,7 @@ node split(string s)
     return k;
 }
 
-int check(node a,node b)
+int Solver::check(node a,node b)
 {
 //	prt(a);prt(b);
     for(int i=1;i<=a.len;i++)
@@ -111,7 +103,7 @@ int check(node a,node b)
     return 0;
 }
 
-node merge(node a,node b,int fl)
+node Solver::merge(node a,node b,int fl)
 {
 //	prt(a);prt(b);
     if(fl==2)
@@ -242,7 +234,7 @@ node merge(node a,node b,int fl)
     }
 }
 
-string change(node x)
+string Solver::change(node x)
 {
     string tp="";
     for(int i=1;i<=x.len;i++)
@@ -265,7 +257,7 @@ string change(node x)
     }
     return tp;
 }
-bool checkans(node x)
+bool Solver::checkans(node x)
 {
     if(x.len!=1)
     {
@@ -283,7 +275,7 @@ bool checkans(node x)
     return 0;
 }
 
-void dfs(int x)
+void Solver::dfs(int x)
 {
     qq[++tt]=x;
     if(x<=10)
@@ -294,7 +286,7 @@ void dfs(int x)
     dfs(ff2[x]);
 }
 
-void solve()
+void Solver::solve()
 {
     while(!q.empty())
     {
@@ -340,4 +332,31 @@ void solve()
         }
         q.push(make_pair(s,num));
     }
+}
+
+void Solver::clear()
+{
+    n = 0;
+    //string ch[505];
+    memset(ch, 0, sizeof(ch));
+    //extern bool fgg[505][505];
+    memset(fgg, 0, sizeof(fgg));
+    ss1 = "";
+    ss2 = "";
+
+    //extern int qq[505];
+    memset(qq, 0, sizeof(qq));
+    tt = 0;
+    ha.clear();
+    //extern string kk1[505],kk2[505];
+    memset(kk1, 0, sizeof(kk1));
+    memset(kk2, 0, sizeof(kk2));
+    //extern bool bb[505];
+    memset(bb, 0, sizeof(bb));
+    //extern int ff1[505],ff2[505];
+    memset(ff1, 0, sizeof(ff1));
+    memset(ff2, 0, sizeof(ff2));
+    //extern queue<pair<string,int> >q;
+    queue<pair<string, int>> empty;
+    swap(empty, q);
 }

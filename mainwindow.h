@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "ziju.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -25,7 +26,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-
+    Solver s;
 
 };
 #endif // MAINWINDOW_H
