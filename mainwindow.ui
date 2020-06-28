@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>子句归结</string>
   </property>
   <property name="styleSheet">
    <string notr="true">#MainWindow{
@@ -183,7 +183,7 @@ border-image:url(:/image/timg,jpg);
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="image.qrc">:/image/image/timg.jpg</pixmap>
+     <pixmap>:/image/image/timg.jpg</pixmap>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_3">
@@ -223,19 +223,7 @@ border-image:url(:/image/timg,jpg);
    <zorder>show</zorder>
    <zorder>pushButton_3</zorder>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>26</height>
-    </rect>
-   </property>
-  </widget>
  </widget>
- <resources>
-  <include location="image.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

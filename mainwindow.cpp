@@ -1,7 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QString>
+#include <QDebug>
 #include <QTextBlock>
+#include <vector>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -22,21 +24,31 @@ void MainWindow::on_pushButton_clicked()
 {
     s.clear();
     ui->show->clear();
-    //ui->show->append("123");    //调试语句
-    QString num_str = ui->InputNum->text();
+    //QString num_str = ui->InputNum->text();
 
-    s.n = num_str.toInt();
+    //s.n = num_str.toInt();
+
+    vector<string> ch;
 
     QTextDocument *doc = ui->plainTextEdit->document(); //文本对象
-    //int cnt=doc->blockCount () ;//回车符是一个 block
-    for (int i = 0; i < s.n; i++)
+    int cnt=doc->blockCount () ;//回车符是一个 block
+
+    //qDebug()<<s.n<<" "<<doc->blockCount()<<endl;
+    ch.push_back("");//暂时从1开始编号
+    for (int i = 0; i < cnt; i++)
     {
 
         QTextBlock textLine = doc->findBlockByNumber(i); // 文本中的一行
         QString temp_horn = textLine.text();
-        s.ch[i + 1] = temp_horn.toStdString();
-        s.q.push(make_pair(s.ch[i + 1], i + 1));
+        if(temp_horn.length())
+        {
+            ch.push_back(temp_horn.toStdString());
+        }
+
+        //s.ch[i + 1] = temp_horn.toStdString();
+        //s.q.push(make_pair(s.ch[i + 1], i + 1));
     }
+    s.init(ch);
 
     s.solve();
 

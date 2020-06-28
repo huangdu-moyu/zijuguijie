@@ -338,7 +338,7 @@ void Solver::clear()
 {
     n = 0;
     //string ch[505];
-    memset(ch, 0, sizeof(ch));
+    ch.clear();
     //extern bool fgg[505][505];
     memset(fgg, 0, sizeof(fgg));
     ss1 = "";
@@ -359,4 +359,16 @@ void Solver::clear()
     //extern queue<pair<string,int> >q;
     queue<pair<string, int>> empty;
     swap(empty, q);
+}
+
+void Solver::init(const vector<string> &clauses)
+{
+    n=static_cast<int>(clauses.size())-1;
+    ch=clauses;
+    ch.resize(505);
+    for(int i=1;i<=n;i++)
+    {
+        q.push(make_pair(ch[i], i));
+    }
+
 }

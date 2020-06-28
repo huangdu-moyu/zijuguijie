@@ -5,6 +5,7 @@
 #include<cstdio>
 #include<algorithm>
 #include<cmath>
+#include<vector>
 #include<queue>
 #include<map>
 #include<iomanip>
@@ -36,13 +37,13 @@ class Solver
 {
 public:
     int n;
-    string ch[505];
+    vector<string> ch;
     bool fgg[505][505];
     string ss1,ss2;
 
     int qq[505];
     int tt;
-    map<int,int>ha;
+    map<int,int> ha;
     string kk1[505],kk2[505];
     bool bb[505];
     int ff1[505],ff2[505];
@@ -57,6 +58,7 @@ public:
     void dfs(int x);
     void solve();
     void clear();
+    void init(const vector<string>& clauses);
 };
 
 
