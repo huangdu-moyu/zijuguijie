@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
 
     ui->setupUi(this);
-    ui->InputNum->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;");
+    //ui->InputNum->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;");
     ui->show->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;");
     ui->plainTextEdit->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;");
 }
@@ -107,6 +107,6 @@ void MainWindow::on_pushButton_3_clicked()
 
     //清空文本框
     ui->show->clear();
-    ui->InputNum->clear();
+    //ui->InputNum->clear();
     ui->plainTextEdit->clear();
 }
