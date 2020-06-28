@@ -16,8 +16,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
     //ui->InputNum->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;");
-    ui->show->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;");
-    ui->plainTextEdit->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;");
+    ui->show->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;border-radius: 10px;");
+    ui->plainTextEdit->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;border-radius: 10px;");
     for(int i=0;i<quesheng_size;i++)
     {
         ui->plainTextEdit->appendPlainText(quesheng[i]);
