@@ -130,7 +130,7 @@ border-image:url(:/image/timg,jpg);
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>image/timg.jpg</pixmap>
+     <pixmap resource="image.qrc">:/image/image/timg.jpg</pixmap>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_3">
@@ -169,6 +169,8 @@ border-image:url(:/image/timg,jpg);
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="image.qrc"/>
+ </resources>
  <connections/>
 </ui>
