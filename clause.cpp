@@ -1,4 +1,4 @@
-#include "ziju.h"
+#include "clause.h"
 #include "mainwindow.h"
 
 Solver::Solver()
@@ -265,6 +265,8 @@ void Solver::dfs(size_t x)
 
 vector<string> Solver::getresult()
 {
+    map<size_t,size_t> orderInResult;
+
     sort(resClauses.begin(), resClauses.end());
     resClauses.resize(
                 static_cast<size_t>(
@@ -273,6 +275,12 @@ vector<string> Solver::getresult()
                 );
     vector<string> res;
     string str;
+
+    for(size_t i=0;i<resClauses.size();i++)
+    {
+        orderInResult[resClauses[i]]=i+1;
+    }
+
     for(size_t i=0;i<resClauses.size();i++)
     {
         size_t u=resClauses[i];
@@ -280,13 +288,13 @@ vector<string> Solver::getresult()
         if (!clausePool[u].isBase)
         {
             str += " (";
-            str += to_string(clausePool[u].parentNo[0]+1);
+            str += to_string(orderInResult[clausePool[u].parentNo[0]]);
             str += ")+(";
-            str += to_string(clausePool[u].parentNo[1]+1);
+            str += to_string(orderInResult[clausePool[u].parentNo[1]]);
             str += ")";
-            if (bb[i])
+            if (clausePool[u].usedVar)
             {
-                str += "    "+kk2[i] + "/" + kk1[i];
+                str += "    "+clausePool[u].replaceName + "/" + clausePool[u].varName;
             }
         }
         res.push_back(str);
@@ -317,24 +325,25 @@ vector<string> Solver::solve(const vector<string> &clauses)
                 continue;
             }
             const Clause& tp=clausePool[i];
-            int tpp=0;
-        //	cout<<s<<" "<<ch[i]<<endl;
-            if((tpp=check(t,tp)))
+            int status=0;
+            /* status==0:无法合并
+             * status==1:可以合并，没有出现变量
+             * status==2:使用了变量*/
+            if((status=check(t,tp)))
             {
-                Clause k=merge(t,tp,tpp);
+                Clause k=merge(t,tp,status);
                 k.parentNo[0]=i;
                 k.parentNo[1]=static_cast<size_t>(num);
-                clausePool.push_back(k);
-        //		print(ch[n],n,t,i,tp,num,tpp);
-                //ff1[n]=i;
-                //ff2[n]=num;
-                if(tpp==2)
+
+                if(status==2)
                 {
-                    bb[n]=1;
-                    kk1[n]=ss1;
-                    kk2[n]=ss2;
+                    k.usedVar=true;
+                    k.varName=ss1;
+                    k.replaceName=ss2;
                 }
                 //flag=1;
+                clausePool.push_back(k);
+
                 if(checkans(k))
                 {
                     dfs(clausePool.size()-1);
@@ -343,7 +352,6 @@ vector<string> Solver::solve(const vector<string> &clauses)
                 q.push(clausePool.size()-1);
                 merged[i][num]=merged[num][i]=1;
             //	fgg[i]=1;
-                n++;
                 break;
             }
         }
@@ -354,17 +362,12 @@ vector<string> Solver::solve(const vector<string> &clauses)
 
 void Solver::clear()
 {
-    n = 0;
     clausePool.clear();
     resClauses.clear();
     memset(merged, 0, sizeof(merged));
     ss1 = "";
     ss2 = "";
 
-    //memset(resClauses, 0, sizeof(resClauses));
-    memset(kk1, 0, sizeof(kk1));
-    memset(kk2, 0, sizeof(kk2));
-    memset(bb, 0, sizeof(bb));
 
     queue<size_t> empty;
     swap(empty, q);
@@ -372,7 +375,6 @@ void Solver::clear()
 
 void Solver::init(const vector<string> &clauses)
 {
-    n=clauses.size();
     for(size_t i=0;i<clauses.size();i++)
     {
         clausePool.push_back(split(clauses[i]));

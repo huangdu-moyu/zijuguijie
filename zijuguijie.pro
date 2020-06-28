@@ -18,11 +18,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    ziju.cpp
+    clause.cpp
 
 HEADERS += \
     mainwindow.h \
-    ziju.h
+    clause.h
 
 FORMS += \
     mainwindow.ui

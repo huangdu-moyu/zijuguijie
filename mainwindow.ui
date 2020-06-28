@@ -10,6 +10,11 @@
     <height>600</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <italic>true</italic>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>子句归结</string>
   </property>
@@ -71,9 +76,14 @@ border-image:url(:/image/timg,jpg);
     </property>
     <property name="font">
      <font>
-      <family>更纱黑体 UI SC</family>
+      <family>Cambria</family>
       <pointsize>11</pointsize>
+      <italic>true</italic>
+      <kerning>true</kerning>
      </font>
+    </property>
+    <property name="plainText">
+     <string/>
     </property>
     <property name="backgroundVisible">
      <bool>false</bool>
@@ -109,8 +119,10 @@ border-image:url(:/image/timg,jpg);
     </property>
     <property name="font">
      <font>
-      <family>更纱黑体 UI SC</family>
+      <family>Cambria</family>
       <pointsize>11</pointsize>
+      <italic>true</italic>
+      <kerning>true</kerning>
      </font>
     </property>
     <property name="autoFillBackground">
@@ -145,7 +157,7 @@ border-image:url(:/image/timg,jpg);
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="image.qrc">:/image/image/timg.jpg</pixmap>
+     <pixmap>:/image/image/timg.jpg</pixmap>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_3">
@@ -254,8 +266,6 @@ border-image:url(:/image/timg,jpg);
    <zorder>label_8</zorder>
   </widget>
  </widget>
- <resources>
-  <include location="image.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

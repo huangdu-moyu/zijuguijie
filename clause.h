@@ -24,6 +24,8 @@ struct Clause
     vector<Word> words;
     bool isBase=false;
     size_t parentNo[2];
+    bool usedVar=false;
+    string varName,replaceName;
 };
 
 
@@ -32,7 +34,6 @@ const int maxClauseNumber=505;
 class Solver
 {
 private:
-    int n;
     vector<Clause> clausePool;
     bool merged[maxClauseNumber][maxClauseNumber];
     string ss1,ss2;
@@ -40,8 +41,8 @@ private:
     vector<size_t> resClauses;
     //int resClauses[505];
     //size_t resClauseNumber;
-    string kk1[505],kk2[505];
-    bool bb[505];
+    //string kk1[505],kk2[505];
+    //bool bb[505];
     queue<size_t> q; //存放子句编号
 
     Clause split(const string& s);
