@@ -41,44 +41,6 @@ border-image:url(:/image/timg,jpg);
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLineEdit" name="InputNum">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>30</y>
-      <width>113</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>更纱黑体 UI SC</family>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="clearButtonEnabled">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>30</y>
-      <width>131</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>更纱黑体 UI SC</family>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>请输入子句个数:</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
@@ -215,8 +177,6 @@ border-image:url(:/image/timg,jpg);
    </widget>
    <zorder>label_4</zorder>
    <zorder>pushButton</zorder>
-   <zorder>InputNum</zorder>
-   <zorder>label</zorder>
    <zorder>label_2</zorder>
    <zorder>plainTextEdit</zorder>
    <zorder>label_3</zorder>

@@ -6,29 +6,37 @@ Solver::Solver()
     clear();
 }
 
-node Solver::split(string s)
+
+
+Clause Solver::split(const string& s)
 {
 //	cout<<s<<endl;
-    string tp="";
+    string tmp="";
     size_t m=s.length();
-    node k;
-    bool fg=0;
+    Clause k;
+    bool is_neg=false;
     for(size_t i=0;i<m;i++)
     {
+        if(s[i]==' ')
+        {
+            continue;
+        }
         if(i==m-1||s[i]=='(')
         {
-            k.len++;
-            k.f[k.len]=tp;
-            k.b[k.len]=fg;
-            tp="";
-            fg=0;
+            Word u;
+            u.predicate=tmp;
+            u.is_neg=is_neg;
+            tmp="";
+            is_neg=0;
             string tt="";
             for(size_t j=i+1;j<m;j++)
             {
                 if(j==m-1||s[j]==')'||s[j]==',')
                 {
-                    k.l[k.len]++;
+                    u.paras.push_back(tt);
+                    /*
                     k.ff[k.len][k.l[k.len]]=tt;
+                    k.l[k.len]++;*/
                     tt="";
                     if(s[j]==')'||j==m-1)
                     {
@@ -41,10 +49,11 @@ node Solver::split(string s)
                     tt=tt+s[j];
                 }
             }
+            k.words.push_back(u);
         }
         else if(s[i]=='~')
         {
-            fg=1;
+            is_neg=true;
         }
         else if(s[i]=='|')
         {
@@ -52,50 +61,49 @@ node Solver::split(string s)
         }
         else
         {
-            tp=tp+s[i];
+            tmp+=s[i];
         }
     }
-//	prt(k);
     return k;
 }
 
-int Solver::check(node a,node b)
+//检查两个子句是否可归结
+int Solver::check(const Clause& a,const Clause& b)
 {
 //	prt(a);prt(b);
-    for(int i=1;i<=a.len;i++)
+
+    for(const Word& u:a.words)
     {
-        for(int j=1;j<=b.len;j++)
+        for(const Word& v:b.words)
         {
-            if(a.f[i]==b.f[j])
+            if(u.predicate==v.predicate &&
+                    u.paras.size()==v.paras.size() &&
+                    u.is_neg!=v.is_neg )
             {
-                if(a.b[i]==b.b[j])
+                int flag=1;
+                for(size_t k=0;k<u.paras.size();k++)
                 {
-                    continue;
-                }
-                int fl=1;
-                for(int k=1;k<=a.l[i];k++)
-                {
-                    if(a.ff[i][k]!=b.ff[j][k])
+                    if(u.paras[k]!=v.paras[k])
                     {
-                        if(a.ff[i][k][0]=='x'||b.ff[j][k][0]=='x')
+                        if(u.paras[k][0]=='x'||v.paras[k][0]=='x') //小写字母x开头表示变量
                         {
-                            fl=2;
+                            flag=2;
                         }
                         else
                         {
-                            fl=0;
+                            flag=0;
                             break;
                         }
                     }
                 }
                 //cout<<fl<<"smlds\n";
-                if(fl==0)
+                if(flag==0)
                 {
                     continue;
                 }
                 else
                 {
-                    return fl;
+                    return flag;
                 }
             }
         }
@@ -103,57 +111,58 @@ int Solver::check(node a,node b)
     return 0;
 }
 
-node Solver::merge(node a,node b,int fl)
+Clause Solver::merge(const Clause& a,const Clause& b,int fl)
 {
 //	prt(a);prt(b);
     if(fl==2)
     {
-        node c;
-        for(int i=1;i<=a.len;i++)
+        Clause c;
+        for(const Word& u:a.words)
+        //for(int i=0;i<a.len;i++)
         {
-            for(int j=1;j<=b.len;j++)
+            for(const Word& v:b.words)
+            //for(int j=0;j<b.len;j++)
             {
-                if(a.f[i]==b.f[j])
+                if(u.predicate==v.predicate &&
+                        u.paras.size()==v.paras.size() &&
+                        u.is_neg!=v.is_neg)
                 {
-                    if(a.b[i]==b.b[j])
+                    for(size_t k=0;k<u.paras.size();k++)
+                    //for(int k=0;k<a.l[i];k++)
                     {
-                        continue;
-                    }
-                    for(int k=1;k<=a.l[i];k++)
-                    {
-                        if(a.ff[i][k]!=b.ff[j][k])
+                        if(u.paras[k]!=v.paras[k])
                         {
-                            if(a.ff[i][k][0]=='x')
+                            if(u.paras[k][0]=='x')
                             {
-                                string tp=a.ff[i][k],tpp=b.ff[j][k];
-                                ss1=tp;
-                                ss2=tpp;
-                                c=a;
-                                for(int ii=1;ii<=c.len;ii++)
+                                string paraU=u.paras[k],paraV=v.paras[k];
+                                ss1=paraU;
+                                ss2=paraV;
+                                c.words=a.words;
+                                for(Word& w:c.words)
                                 {
-                                    for(int jj=1;jj<=c.l[ii];jj++)
+                                    for(string& para:w.paras)
                                     {
-                                        if(c.ff[ii][jj]==tp)
+                                        if(para==paraU)
                                         {
-                                            c.ff[ii][jj]=tpp;
+                                            para=paraV;
                                         }
                                     }
                                 }
                                 return merge(c,b,1);
                             }
-                            if(b.ff[j][k][0]=='x')
+                            if(v.paras[k][0]=='x')
                             {
-                                string tpp=a.ff[i][k],tp=b.ff[j][k];
-                                ss1=tp;
-                                ss2=tpp;
-                                c=b;
-                                for(int ii=1;ii<=c.len;ii++)
+                                string paraU=u.paras[k],paraV=v.paras[k];
+                                ss1=paraV;
+                                ss2=paraU;
+                                c.words=b.words;
+                                for(Word& w:c.words)
                                 {
-                                    for(int jj=1;jj<=c.l[ii];jj++)
+                                    for(string& para:w.paras)
                                     {
-                                        if(c.ff[ii][jj]==tp)
+                                        if(para==paraV)
                                         {
-                                            c.ff[ii][jj]=tpp;
+                                            para=paraU;
                                         }
                                     }
                                 }
@@ -168,117 +177,85 @@ node Solver::merge(node a,node b,int fl)
     }
     else
     {
-        node c;
-        int f1=0,f2=0;
-        for(int i=1;i<=a.len;i++)
+        Clause c;
+        for(const Word& u:a.words)
         {
-            for(int j=1;j<=b.len;j++)
+            for (const Word &v : b.words)
             {
-                if(a.f[i]==b.f[j])
+                if (u.predicate == v.predicate &&
+                    u.paras.size() == v.paras.size() &&
+                    u.is_neg != v.is_neg)
                 {
-                    if(a.b[i]!=b.b[j])
+                    bool is_equal = true;
+                    for (size_t k = 0; k < u.paras.size(); k++)
                     {
-                        int fl=1;
-                        for(int k=1;k<=a.l[i];k++)
+                        if (u.paras[k] != v.paras[k])
                         {
-                            if(a.ff[i][k]!=b.ff[j][k])
+                            is_equal = false;
+                            break;
+                        }
+                    }
+                    if (is_equal)   //消去该项
+                    {
+                        for(size_t i=0;i<a.words.size();i++)
+                        {
+                            if(&a.words[i]!=&u)
                             {
-                                fl=0;
-                                break;
+                                c.words.push_back(a.words[i]);
                             }
                         }
-                        if(fl==0)
+                        for(size_t i=0;i<b.words.size();i++)
                         {
-                            continue;
+                            if(&b.words[i]!=&v)
+                            {
+                                c.words.push_back(b.words[i]);
+                            }
                         }
-                        else
-                        {
-                            f1=i;
-                            f2=j;
-                            goto XX;
-                        }
+                        return c;
                     }
                 }
             }
         }
-        XX:
-            for(int i=1;i<=a.len;i++)
-            {
-                if(i!=f1)
-                {
-                    c.len++;
-                    c.f[c.len]=a.f[i];
-                    c.b[c.len]=a.b[i];
-                    c.l[c.len]=a.l[i];
-                    for(int j=1;j<=a.l[i];j++)
-                    {
-                        c.ff[c.len][j]=a.ff[i][j];
-                    }
-                }
-            }
-            for(int i=1;i<=b.len;i++)
-            {
-                if(i!=f2)
-                {
-                    c.len++;
-                    c.f[c.len]=b.f[i];
-                    c.b[c.len]=b.b[i];
-                    c.l[c.len]=b.l[i];
-                    for(int j=1;j<=b.l[i];j++)
-                    {
-                        c.ff[c.len][j]=b.ff[i][j];
-                    }
-                }
-            }
-            return c;
+        return c;
     }
 }
 
-string Solver::change(node x)
+string Solver::change(const Clause& x)
 {
-    string tp="";
-    for(int i=1;i<=x.len;i++)
+    string res="";
+    for(size_t i=0;i<x.words.size();i++)
     {
-        if(x.b[i])
+        if(x.words[i].is_neg)
         {
-            tp=tp+"~";
+            res+="~";
         }
-        tp=tp+x.f[i];
-        tp=tp+"(";
-        for(int j=1;j<=x.l[i];j++)
+        res+=x.words[i].predicate;
+        res+="(";
+        for(size_t j=0;j<x.words[i].paras.size();j++)
         {
-            tp=tp+x.ff[i][j];
-            tp=tp+(j==x.l[i]?")":",");
+            res+=x.words[i].paras[j];
+            res+=(j==x.words[i].paras.size()-1?")":",");
         }
-        if(i!=x.len)
+        if(i!=x.words.size()-1)
         {
-            tp=tp+"|";
+            res+="|";
         }
     }
-    return tp;
+    return res;
 }
-bool Solver::checkans(node x)
+bool Solver::checkans(const Clause& x)
 {
-    if(x.len!=1)
+    if(x.words.size()!=1)
     {
         return 0;
     }
-    if(x.b[1]!=0||x.l[1]!=1)
-    {
-        return 0;
-    }
-    string tp="ANSWER";
-    if(x.f[1]==tp)
-    {
-        return 1;
-    }
-    return 0;
+    return x.words[0].predicate=="ANSWER"&&x.words[0].is_neg==false;
 }
 
 void Solver::dfs(int x)
 {
-    qq[++tt]=x;
-    if(x<=10)
+    resClauses[resClauseNumber++]=x;
+    if(x<10)
     {
         return;
     }
@@ -292,23 +269,22 @@ void Solver::solve()
     {
         string s=q.front().first;
         int num=q.front().second;
+        Clause t=split(s);
         q.pop();
-        node t=split(s);
-        if(t.len!=1)
+        if(t.words.size()!=1)
         {
-            q.push(make_pair(s,num));
             continue;
         }
         //bool flag=0;
-        for(int i=1;i<=n;i++)
+        for(int i=0;i<n;i++)
         {
-            node tp=split(ch[i]);
+            Clause tp=split(ch[i]);
             int tpp=0;
         //	cout<<s<<" "<<ch[i]<<endl;
-            if((tpp=check(t,tp))&&!fgg[i][num])
+            if(i!=num&&!fgg[i][num]&&(tpp=check(t,tp)))
             {
-                node k=merge(t,tp,tpp);
-                ch[++n]=change(k);
+                Clause k=merge(t,tp,tpp);
+                ch.push_back(change(k));
         //		print(ch[n],n,t,i,tp,num,tpp);
                 ff1[n]=i;
                 ff2[n]=num;
@@ -324,9 +300,10 @@ void Solver::solve()
                     dfs(n);
                     return;
                 }
-                q.push(make_pair(ch[n],n));
+                q.push(make_pair(*ch.rbegin(),n));
                 fgg[i][num]=fgg[num][i]=1;
             //	fgg[i]=1;
+                n++;
                 break;
             }
         }
@@ -337,38 +314,29 @@ void Solver::solve()
 void Solver::clear()
 {
     n = 0;
-    //string ch[505];
     ch.clear();
-    //extern bool fgg[505][505];
     memset(fgg, 0, sizeof(fgg));
     ss1 = "";
     ss2 = "";
 
-    //extern int qq[505];
-    memset(qq, 0, sizeof(qq));
-    tt = 0;
-    ha.clear();
-    //extern string kk1[505],kk2[505];
+    //memset(resClauses, 0, sizeof(resClauses));
+    resClauseNumber = 0;
     memset(kk1, 0, sizeof(kk1));
     memset(kk2, 0, sizeof(kk2));
-    //extern bool bb[505];
     memset(bb, 0, sizeof(bb));
-    //extern int ff1[505],ff2[505];
     memset(ff1, 0, sizeof(ff1));
     memset(ff2, 0, sizeof(ff2));
-    //extern queue<pair<string,int> >q;
+
     queue<pair<string, int>> empty;
     swap(empty, q);
 }
 
 void Solver::init(const vector<string> &clauses)
 {
-    n=static_cast<int>(clauses.size())-1;
+    n=static_cast<int>(clauses.size());
     ch=clauses;
-    ch.resize(505);
-    for(int i=1;i<=n;i++)
+    for(int i=0;i<n;i++)
     {
         q.push(make_pair(ch[i], i));
     }
-
 }

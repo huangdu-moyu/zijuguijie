@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
 
     ui->setupUi(this);
-    ui->InputNum->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;");
     ui->show->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;");
     ui->plainTextEdit->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;");
 }
@@ -34,7 +33,6 @@ void MainWindow::on_pushButton_clicked()
     int cnt=doc->blockCount () ;//回车符是一个 block
 
     //qDebug()<<s.n<<" "<<doc->blockCount()<<endl;
-    ch.push_back("");//暂时从1开始编号
     for (int i = 0; i < cnt; i++)
     {
 
@@ -52,40 +50,24 @@ void MainWindow::on_pushButton_clicked()
 
     s.solve();
 
-    sort(s.qq + 1, s.qq + s.tt + 1);
-    int gg = 0;
-    for (int i = 1; i <= s.tt; i++)
-    {
-        if (s.qq[i] == s.qq[i - 1])
-        {
-            continue;
-        }
-        s.ha[s.qq[i]] = ++gg;
-    }
+    sort(s.resClauses, s.resClauses + s.resClauseNumber);
+    s.resClauseNumber=static_cast<size_t>(
+                unique(s.resClauses,s.resClauses+s.resClauseNumber)-s.resClauses);
+
     string str;
     QString qstr;
-    for (int i = 1; i <= s.n; i++)
+    for (size_t i = 0; i < s.resClauseNumber; i++)
     {
-        if (!s.ha[i])
-        {
-            continue;
-        }
-        if (i < 10)
-        {
-            str = "  " + to_string(s.ha[i]) + ":  " + s.ch[i];
-        }
-        else
-        {
-            str = " " + to_string(s.ha[i]) + ":  " + s.ch[i];
-        }
+        size_t u=static_cast<size_t>(s.resClauses[i]);
+        str = "  " + to_string(i+1) + ":  " + s.ch[u];
+
         //cout<<setw(3)<<ha[i]<<":  "<<ch[i];
-        if (i > 10)
+        if (i > 9)
         {
-            str += " ";
-            str += "(";
-            str += to_string(s.ha[s.ff1[i]]);
+            str += " (";
+            str += to_string(s.ff1[i]+1);
             str += ")+(";
-            str += to_string(s.ha[s.ff2[i]]);
+            str += to_string(s.ff2[i]+1);
             str += ")";
             //cout<<" "<<"("<<ha[ff1[i]]<<")+("<<ha[ff2[i]]<<")";
             if (s.bb[i])
@@ -107,6 +89,5 @@ void MainWindow::on_pushButton_3_clicked()
 
     //清空文本框
     ui->show->clear();
-    ui->InputNum->clear();
     ui->plainTextEdit->clear();
 }

@@ -12,26 +12,25 @@
 using namespace std;
 typedef long long ll;
 
-struct node
+struct Word
 {
-    int len;
+    bool is_neg;
+    string predicate;
+    vector<string> paras;
+};
+
+struct Clause
+{
+    /*int len;
     string f[15];
     string ff[15][5];
     bool b[15];
-    int l[15];
-    node()
-    {
-        len=0;
-        for(int i=0;i<15;i++)
-        {
-            f[i].clear();
-            for(int j=0;j<5;j++)
-                ff[i][j].clear();
-        }
-        memset(b,0,sizeof(b));
-        memset(l,0,sizeof(l));
-    }
+    int l[15];*/
+    vector<Word> words;
 };
+
+
+
 
 class Solver
 {
@@ -41,20 +40,19 @@ public:
     bool fgg[505][505];
     string ss1,ss2;
 
-    int qq[505];
-    int tt;
-    map<int,int> ha;
+    int resClauses[505];
+    size_t resClauseNumber;
     string kk1[505],kk2[505];
     bool bb[505];
     int ff1[505],ff2[505];
     queue<pair<string,int> >q;
 
     Solver();
-    node split(string s);
-    int check(node a,node b);
-    node merge(node a,node b,int fl);
-    string change(node x);
-    bool checkans(node x);
+    Clause split(const string& s);
+    int check(const Clause& a,const Clause& b);
+    Clause merge(const Clause& a,const Clause& b,int fl);
+    string change(const Clause& x);
+    bool checkans(const Clause& x);
     void dfs(int x);
     void solve();
     void clear();
