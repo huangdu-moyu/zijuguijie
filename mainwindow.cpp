@@ -7,7 +7,11 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
+    ui->InputNum->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;");
+    ui->show->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;");
+    ui->plainTextEdit->setStyleSheet("background:rgb(255,0,0,0);border:1px solid white;");
 }
 
 MainWindow::~MainWindow()
