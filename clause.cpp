@@ -114,6 +114,7 @@ int Solver::check(const Clause& a,const Clause& b)
 Clause Solver::merge(const Clause& a,const Clause& b,int fl)
 {
 //	prt(a);prt(b);
+    //使用了变量的情况
     if(fl==2)
     {
         Clause c;
@@ -351,7 +352,6 @@ vector<string> Solver::solve(const vector<string> &clauses)
                 }
                 q.push(clausePool.size()-1);
                 merged[i][num]=merged[num][i]=1;
-            //	fgg[i]=1;
                 break;
             }
         }

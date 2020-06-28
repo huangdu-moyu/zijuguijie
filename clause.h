@@ -39,10 +39,6 @@ private:
     string ss1,ss2;
 
     vector<size_t> resClauses;
-    //int resClauses[505];
-    //size_t resClauseNumber;
-    //string kk1[505],kk2[505];
-    //bool bb[505];
     queue<size_t> q; //存放子句编号
 
     Clause split(const string& s);
@@ -60,30 +56,6 @@ public:
 
 };
 
-
-
-
-/*
-int n;
-string ch[505];
-bool fgg[505][505];
-string ss1,ss2;
-
-int qq[505];
-int tt;
-map<int,int>ha;
-string kk1[505],kk2[505];
-bool bb[505];
-int ff1[505],ff2[505];
-queue<pair<string,int> >q;
-
-node split(string s);
-int check(node a,node b);
-node merge(node a,node b,int fl);
-string change(node x);
-bool checkans(node x);
-void dfs(int x);
-void solve();*/
 
 #endif // ZIJU_H
 
