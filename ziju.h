@@ -34,7 +34,7 @@ struct Clause
 
 class Solver
 {
-public:
+private:
     int n;
     vector<string> ch;
     bool fgg[505][505];
@@ -47,14 +47,16 @@ public:
     int ff1[505],ff2[505];
     queue<pair<string,int> >q;
 
-    Solver();
     Clause split(const string& s);
     int check(const Clause& a,const Clause& b);
     Clause merge(const Clause& a,const Clause& b,int fl);
     string change(const Clause& x);
     bool checkans(const Clause& x);
     void dfs(int x);
-    void solve();
+    vector<string> getresult();
+public:
+    Solver();
+    vector<string> solve();
     void clear();
     void init(const vector<string>& clauses);
 };

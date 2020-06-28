@@ -49,38 +49,11 @@ void MainWindow::on_pushButton_clicked()
     }
     s.init(ch);
 
-    s.solve();
+    vector<string> res=s.solve();
 
-    sort(s.resClauses, s.resClauses + s.resClauseNumber);
-    s.resClauseNumber=static_cast<size_t>(
-                unique(s.resClauses,s.resClauses+s.resClauseNumber)-s.resClauses);
-
-    string str;
-    QString qstr;
-    for (size_t i = 0; i < s.resClauseNumber; i++)
+    for (const string& str:res)
     {
-        size_t u=static_cast<size_t>(s.resClauses[i]);
-        str = "  " + to_string(i+1) + ":  " + s.ch[u];
-
-        //cout<<setw(3)<<ha[i]<<":  "<<ch[i];
-        if (i > 9)
-        {
-            str += " (";
-            str += to_string(s.ff1[i]+1);
-            str += ")+(";
-            str += to_string(s.ff2[i]+1);
-            str += ")";
-            //cout<<" "<<"("<<ha[ff1[i]]<<")+("<<ha[ff2[i]]<<")";
-            if (s.bb[i])
-            {
-                str += "    ";
-                str += s.kk2[i] + "/" + s.kk1[i];
-                //cout<<"    "<<kk2[i]<<"/"<<kk1[i];
-            }
-        }
-        //cout<<endl;
-        qstr = QString::fromStdString(str);
-        ui->show->append(qstr);
+        ui->show->append(QString::fromStdString(str));
     }
 }
 
